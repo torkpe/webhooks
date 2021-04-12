@@ -45,7 +45,7 @@ export async function subscribe(request, response, next) {
 
 export async function publish(request, response, next) {
   try {
-    const channel = Channel.findOne({
+    const channel = await Channel.findOne({
       where: {
         id: request.params.id
       }
@@ -61,12 +61,12 @@ export async function publish(request, response, next) {
       }
     });
 
-    subscriptions.map(async (subscription) => axios({
+    subscriptions.map((subscription) => axios({
       method: 'POST',
       url: subscription.url,
       data: {
         data: request.body.data,
-        topic: subscription.topic
+        topic: channel.topic
       }
     }))
 
